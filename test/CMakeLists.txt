@@ -66,5 +66,11 @@ target_sources(deep_stack PRIVATE src/deep_stack.cc)
 target_include_directories(
   deep_stack PRIVATE $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
                      $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include>)
+target_compile_options(
+  deep_stack
+  PRIVATE
+    $<$<CXX_COMPILER_ID:MSVC>:/DBERTRAND_PRINT_STACKTRACE>
+    $<$<OR:$<CXX_COMPILER_ID:GNU>,$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:AppleClang>>:-DBERTRAND_PRINT_STACKTRACE>
+)
 
 add_test(NAME bertrand_tests COMMAND bertrand_tests)
