@@ -60,4 +60,11 @@ target_include_directories(
   failing_contract PRIVATE $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
                            $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include>)
 
+add_executable(deep_stack)
+target_sources(deep_stack PRIVATE src/deep_stack.cc)
+
+target_include_directories(
+  deep_stack PRIVATE $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
+                     $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include>)
+
 add_test(NAME bertrand_tests COMMAND bertrand_tests)

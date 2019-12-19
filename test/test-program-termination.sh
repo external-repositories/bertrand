@@ -77,6 +77,8 @@ testForAbnormalProgramTerminationInReleaseModeWhenContractsForceEnabled() {
 }
 
 
+
+
 testForNormalProgramTerminationInDebugModeWhenContractsForceDisabled() {
     
     cmake -DCMAKE_BUILD_TYPE=Debug "${ROOT_DIR}" -B"${BUILD_DIR}" -DCMAKE_CXX_FLAGS="-DBERTRAND_DISABLE_CONTRACTS" -DBERTRAND_BUILD_TESTING=on -G Ninja >/dev/null
@@ -94,6 +96,23 @@ testForCompilationFailureWhenContractsForceEnabledAndForceDisabledTogether() {
     cmake --build "${BUILD_DIR}" --target failing_contract
     assertNotEquals "build fails" 0 $?
     
+}
+
+testForStacktraceOnProgramTerminationInDebugMode() {
+    cmake -DCMAKE_BUILD_TYPE=Debug "${ROOT_DIR}" -B"${BUILD_DIR}" -DCMAKE_CXX_FLAGS="-DBERTRAND_PRINT_STACKTRACE" -G Ninja >/dev/null
+    cmake --build "${BUILD_DIR}" --target deep_stack
+    assertEquals "build successful" 0 $?
+    assertTrue "Test executable exists" "[ -f "${BUILD_DIR}/test/deep_stack" ]"
+    
+    OUTPUT=$("${BUILD_DIR}/test/deep_stack" 2>&1)
+    assertNotEquals "Executabled terminated non-zero" $? 0
+    TEXT=$OUTPUT
+    echo $TEXT
+    EXPECTED_TEXT="${SCRIPT_DIR}/src/deep_stack.cc:6: ('false') Cannot be false"
+    if [[ $OUTPUT =~ "${EXPECTED_TEXT}" ]]; then
+        TEXT=$EXPECTED_TEXT
+    fi
+    assertEquals "Text is there" "${EXPECTED_TEXT}" "${TEXT}"
 }
 
 . shunit2
