@@ -13,7 +13,6 @@
 #pragma once
 
 ///@todo add function to message
-///@todo add possibility for delivering stack trace
 
 // fail compilation of contracts are force-enabled and force-disabled at the
 // same time
@@ -28,14 +27,21 @@ static_assert(false,
 #endif
 
 #ifdef BERTRAND_ENABLE_CONTRACTS
+
 #include <iostream>
 #include <sstream>
+
 // asserts as exceptions is a workaround for testing purposes, do not use in
 // production
 #ifdef BERTRAND_CONTRACTS_ARE_EXCEPTIONS
 #include <stdexcept>
 #else
 #include <cstdlib>
+#endif
+
+#ifdef BERTRAND_PRINT_STACKTRACE
+#include <execinfo.h>
+#include <unistd.h>
 #endif
 
 namespace bertrand {
@@ -53,6 +59,18 @@ inline void assert_handler(bool expr, const char *expression, const char *file,
     }
     buffer << "\n";
     std::cerr << buffer.str();
+
+#ifdef BERTRAND_PRINT_STACKTRACE
+    void *array[10];
+    size_t size;
+
+    // get void*'s for all entries on the stack
+    size = backtrace(array, 10);
+
+    // print out all the frames to stderr
+    backtrace_symbols_fd(array, size, STDERR_FILENO);
+#endif
+
 #ifdef BERTRAND_CONTRACTS_ARE_EXCEPTIONS
     throw std::runtime_error(buffer.str());
 #else
