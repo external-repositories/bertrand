@@ -39,9 +39,11 @@ static_assert(false,
 #include <cstdlib>
 #endif
 
-#ifdef BERTRAND_PRINT_STACKTRACE
+#if defined(BERTRAND_PRINT_STACKTRACE) && __has_include(<execinfo.h>)
 #include <execinfo.h>
 #include <unistd.h>
+#else
+#undef BERTRAND_PRINT_STACKTRACE
 #endif
 
 namespace bertrand {
