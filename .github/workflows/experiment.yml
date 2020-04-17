@@ -7,7 +7,7 @@ jobs:
   dockerbasedci:
     name: build-inside-docker
     runs-on: ubuntu-latest
-    #container: conanio/gcc9:latest
+    container: conanio/gcc9:latest
 
     steps:
       - uses: actions/checkout@v1
