@@ -7,17 +7,19 @@ jobs:
   dockerbasedci:
     name: build-inside-docker
     runs-on: ubuntu-latest
-    container: conanio/gcc9:latest
+    container:
+      image: conanio/gcc9:latest
 
     steps:
       - uses: actions/checkout@v1
-      - name: make-build-dir
-        run: mkdir build
-      - name: cmake-configure-debug
-        run: cmake -DCMAKE_BUILD_TYPE=Debug ..
-        working-directory: ./build
-      - name: build-debug
-        run: cmake --build ./build --config Debug
-      - name: ctest
-        run: ctest -C Debug
-        working-directory: ./build
+      - name: finding-source in root
+        run: pwd && ls
+      # - name: cmake-configure-debug
+      #   run: cmake -DCMAKE_BUILD_TYPE=Debug ..
+      #   working-directory: /root/mount/build
+      # - name: build-debug
+      #   run: cmake --build . --config Debug
+      #   working-directory: /root/mount/build
+      # - name: ctest
+      #   run: ctest -C Debug
+      #   working-directory: /root/mount/build
