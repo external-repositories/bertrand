@@ -13,7 +13,7 @@ jobs:
     steps:
       - uses: actions/checkout@v1
       - name: finding-source in root
-        run: pwd && ls -l
+        run: pwd && ls -l && id
       - name: create-build-dir
         run: sudo mkdir build
 
