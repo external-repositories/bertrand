@@ -9,20 +9,21 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: conanio/gcc9:latest
+      volumes: 
+        - /home/runner/work/bertrand/bertrand/:/home/conan/bertrand
 
     steps:
       - uses: actions/checkout@v1
       - name: finding-source in root
         run: pwd && ls -l && id
       - name: create-build-dir
-        run: sudo mkdir build
-
+        run: /home/conan/bertrand && mkdir build
       - name: cmake-configure-debug
         run: sudo cmake -DCMAKE_BUILD_TYPE=Debug ..
-        working-directory: ./build
+        working-directory: /home/conan/bertrand/build
       - name: build-debug
         run: sudo cmake --build . --config Debug
-        working-directory: ./build
+        working-directory: /home/conan/bertrand/build
       - name: ctest
         run: ctest -C Debug
-        working-directory: ./build
+        working-directory: /home/conan/bertrand/build
