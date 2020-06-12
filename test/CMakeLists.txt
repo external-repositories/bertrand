@@ -62,6 +62,7 @@ target_include_directories(
 
 add_executable(deep_stack)
 target_sources(deep_stack PRIVATE src/deep_stack.cc)
+target_compile_features(deep_stack PRIVATE cxx_std_17)
 
 target_include_directories(
   deep_stack PRIVATE $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>

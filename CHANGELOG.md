@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.0.11
+
+*   Printing stack trace on failing contract
+
 ## 0.0.10
 
 *   Including bertrand as a subdirectory in cmake disables building the tests
