@@ -40,6 +40,7 @@ static_assert(false,
 #endif
 
 #if defined(BERTRAND_PRINT_STACKTRACE) && __has_include(<execinfo.h>)
+#include <cxxabi.h>
 #include <execinfo.h>
 #include <unistd.h>
 #else
@@ -63,14 +64,28 @@ inline void assert_handler(bool expr, const char *expression, const char *file,
     std::cerr << buffer.str();
 
 #ifdef BERTRAND_PRINT_STACKTRACE
-    void *array[10];
+    void *array[15];
     size_t size;
 
     // get void*'s for all entries on the stack
-    size = backtrace(array, 10);
+    size = backtrace(array, 15);
 
     // print out all the frames to stderr
-    backtrace_symbols_fd(array, size, STDERR_FILENO);
+    // backtrace_symbols_fd(array, size, STDERR_FILENO);
+    char **ptr = backtrace_symbols(array, size);
+    for (size_t i = 0; i < size; ++i) {
+      std::cerr << ptr[i] << "\n";
+    }
+
+    // here is an example of C++ demangling
+    // int status = -1;
+    // char *demangledName = abi::__cxa_demangle("+0x13d8", NULL, NULL,
+    // &status); if (status == 0) {
+    //   printf("+0x13d8 demangles to:  %s\n", demangledName);
+    // } else {
+    //   std::cerr << "FAULT\n";
+    // }
+    // free(demangledName);
 #endif
 
 #ifdef BERTRAND_CONTRACTS_ARE_EXCEPTIONS

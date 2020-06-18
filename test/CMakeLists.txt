@@ -72,6 +72,7 @@ target_compile_options(
   PRIVATE
     $<$<CXX_COMPILER_ID:MSVC>:/DBERTRAND_PRINT_STACKTRACE>
     $<$<OR:$<CXX_COMPILER_ID:GNU>,$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:AppleClang>>:-DBERTRAND_PRINT_STACKTRACE>
+    $<$<OR:$<CXX_COMPILER_ID:GNU>,$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:AppleClang>>:-rdynamic>
 )
 
 add_test(NAME bertrand_tests COMMAND bertrand_tests)
